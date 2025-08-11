@@ -1,0 +1,98 @@
+/* src/App.css */
+.App {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f0f0f0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Add this to the end of src/App.css */
+
+#mandala-canvas-react {
+  width: 500px;
+  height: 500px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background-color: #F7F7F7;
+  border: 1px solid #EAEAEA;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+body.dark-mode #mandala-canvas-react {
+  background-color: #1C1C1E;
+  border-color: #333;
+}
+
+.controls-panel {
+  width: 350px;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.canvas-container {
+  flex-grow: 1;
+  display: grid;
+  place-items: center;
+}
+
+/* Add these styles to src/App.css */
+.control-group {
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.slider-control {
+  margin-bottom: 15px;
+}
+
+.slider-control label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.slider-control input[type="range"] {
+  width: 100%;
+}
+
+/* src/App.css */
+.control-group-buttons {
+  margin-top: 20px;
+}
+
+.control-group-buttons label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.control-group-buttons button {
+  padding: 8px 12px;
+  margin-right: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.control-group-buttons button.active {
+  background-color: #e0e0e0;
+  border-color: #999;
+}
+
+body.dark-mode .control-group-buttons button {
+  background-color: #2a2a2a;
+  border-color: #444;
+}
+
+body.dark-mode .control-group-buttons button.active {
+  background-color: #444;
+  border-color: #666;
+}
