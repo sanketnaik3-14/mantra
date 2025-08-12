@@ -312,12 +312,24 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                         }
                         break;
 
-                    case 9: // Triangles
+                    case 9: // Triangles (FIXED)
                         const angleStepTriangle = (Math.PI * 2) / symmetry;
-                        const t1 = new Two.Vector(center.x + layerRadius * Math.cos(angle), center.y + layerRadius * Math.sin(angle));
-                        const t2 = new Two.Vector(center.x + innerRadius * Math.cos(angle - angleStepTriangle / 2.5), center.y + innerRadius * Math.sin(angle - angleStepTriangle / 2.5));
-                        const t3 = new Two.Vector(center.x + innerRadius * Math.cos(angle + angleStepTriangle / 2.5), center.y + innerRadius * Math.sin(angle + angleStepTriangle / 2.5));
+
+                        // Create "safe" boundaries by pulling in 1px from the edges
+                        const safeOuterRadius = layerRadius - 1;
+                        const safeInnerRadius = innerRadius + 1;
+
+                        // Ensure the shape doesn't invert if the layer is too thin
+                        if (safeInnerRadius >= safeOuterRadius) {
+                            break;
+                        }
+
+                        const t1 = new Two.Vector(center.x + safeOuterRadius * Math.cos(angle), center.y + safeOuterRadius * Math.sin(angle));
+                        const t2 = new Two.Vector(center.x + safeInnerRadius * Math.cos(angle - angleStepTriangle / 2.5), center.y + safeInnerRadius * Math.sin(angle - angleStepTriangle / 2.5));
+                        const t3 = new Two.Vector(center.x + safeInnerRadius * Math.cos(angle + angleStepTriangle / 2.5), center.y + safeInnerRadius * Math.sin(angle + angleStepTriangle / 2.5));
+
                         const triangle = new Two.Path([t1, t2, t3], true);
+
                         if (styleChoice < 0.5) {
                             triangle.fill = layerColor;
                             triangle.noStroke();
