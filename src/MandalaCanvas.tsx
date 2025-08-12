@@ -266,17 +266,24 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                     case 7: // Scalloped Ring (FIXED)
                         if (j === 0) {
                             const outerVertices = [], innerVertices = [];
-                            const scallopCount = symmetry * 3, scallopAmplitude = layerWidth * 0.4;
+                            const scallopCount = symmetry * 3;
+                            // The amplitude is now half the layer width, ensuring it doesn't exceed the boundaries.
+                            const scallopAmplitude = layerWidth / 2;
+
                             for (let k = 0; k <= scallopCount; k++) {
                                 const scallopAngle = (k / scallopCount) * (Math.PI * 2);
-                                // **FIX**: The base radius is now smaller to prevent crossing the boundary
-                                const baseRadius = layerCenterRadius - scallopAmplitude / 2;
-                                const r_outer = baseRadius + scallopAmplitude * Math.sin(scallopAngle * symmetry);
+
+                                // The calculation is now based on the layer's center radius.
+                                const r_outer = layerCenterRadius + scallopAmplitude * Math.sin(scallopAngle * symmetry);
+
+                                // We still use the original innerRadius for the inner part of the shape.
                                 const r_inner = innerRadius;
+
                                 outerVertices.push(new Two.Vector(center.x + r_outer * Math.cos(scallopAngle), center.y + r_outer * Math.sin(scallopAngle)));
                                 innerVertices.push(new Two.Vector(center.x + r_inner * Math.cos(scallopAngle), center.y + r_inner * Math.sin(scallopAngle)));
                             }
                             const scallopPath = new Two.Path(outerVertices.concat(innerVertices.reverse()), true);
+
                             if (styleChoice < 0.5) {
                                 scallopPath.fill = layerColor;
                                 scallopPath.noStroke();
