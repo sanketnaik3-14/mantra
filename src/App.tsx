@@ -7,14 +7,25 @@ import './App.css';
 
 function App() {
   // --- STATE MANAGEMENT ---
-  // We now manage the state for our controls here in the main App
   const [layerWidthType, setLayerWidthType] = useState<'dynamic' | 'equal'>('dynamic');
   const [symmetry, setSymmetry] = useState(30);
   const [layers, setLayers] = useState(8);
-  // This 'seed' is a random string. When we change it, it will trigger
-  // the canvas to regenerate with a new random style.
   const [seed, setSeed] = useState(uuidv4());
+  const [isSeparated, setIsSeparated] = useState(false);
+
+  // --- New state for layer editing and boundary visibility ---
+  const [activeLayer, setActiveLayer] = useState<number | null>(null);
+  const [showBoundaries, setShowBoundaries] = useState(false);
   // --- END STATE MANAGEMENT ---
+
+  // When separating layers, default to showing all layers
+  const toggleSeparation = () => {
+    const newSeparationState = !isSeparated;
+    setIsSeparated(newSeparationState);
+    if (!newSeparationState) {
+      setActiveLayer(null); // Reset active layer when combining
+    }
+  };
 
   return (
     <div className="App">
@@ -22,7 +33,6 @@ function App() {
         <h2>Mantra Designer</h2>
         <p>Use the controls to create your unique mandala.</p>
 
-        {/* We pass the state values and setters to our controls */}
         <GlobalControls
           symmetry={symmetry}
           setSymmetry={setSymmetry}
@@ -30,15 +40,33 @@ function App() {
           setLayers={setLayers}
           layerWidthType={layerWidthType}
           setLayerWidthType={setLayerWidthType}
+          isSeparated={isSeparated}
+          activeLayer={activeLayer}
+          setActiveLayer={setActiveLayer}
         />
 
-        <button className="generate-button" onClick={() => setSeed(uuidv4())}>
-          Randomize Style
-        </button>
+        <div className="control-group-buttons">
+          <button onClick={toggleSeparation}>
+            {isSeparated ? 'Combine Layers' : 'Separate Layers'}
+          </button>
+          <button onClick={() => setShowBoundaries(!showBoundaries)}>
+            {showBoundaries ? 'Hide Boundaries' : 'Show Boundaries'}
+          </button>
+          <button className="generate-button" onClick={() => setSeed(uuidv4())}>
+            Randomize Style
+          </button>
+        </div>
       </div>
       <div className="canvas-container">
-        {/* We pass the state values down to the canvas as props */}
-        <MandalaCanvas layers={layers} symmetry={symmetry} seed={seed} layerWidthType={layerWidthType} />
+        <MandalaCanvas
+          layers={layers}
+          symmetry={symmetry}
+          seed={seed}
+          layerWidthType={layerWidthType}
+          isSeparated={isSeparated}
+          activeLayer={activeLayer}
+          showBoundaries={showBoundaries}
+        />
       </div>
     </div>
   );
