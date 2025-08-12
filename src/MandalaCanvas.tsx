@@ -74,7 +74,7 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
         const selectedPalette = palettes[prng.nextInt(0, palettes.length - 1)];
         const maxLayers = 18;
         const layerStyles = Array.from({ length: maxLayers }, () => ({
-            shapeType: prng.nextInt(0, 13),
+            shapeType: prng.nextInt(0, 14),
             styleChoice: prng.nextFloat(),
         }));
         const weights = Array.from({ length: maxLayers }, () => prng.nextFloat());
@@ -96,9 +96,13 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
         const draw = () => {
             if (!two) return;
 
+            // --- FIX: Calculate size based on the container ---
             const rect = container.getBoundingClientRect();
-            two.width = rect.width;
-            two.height = rect.height;
+            const size = Math.min(rect.width, rect.height) * 0.9; // Use 90% of smallest dimension
+
+            two.width = size;
+            two.height = size;
+            // --- END FIX ---
 
             two.clear();
 
@@ -155,7 +159,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
 
                     switch (shapeType) {
                         // All 14 case blocks...
-                        case 0: // Fine Spikes
+                        // Replace the entire contents of your switch statement with this
+
+                        case 0: { // Fine Spikes
                             const angleStepSpike = (Math.PI * 2) / symmetry;
                             const tip = new Two.Vector(center.x + layerRadius * Math.cos(angle), center.y + layerRadius * Math.sin(angle));
                             const baseLeft = new Two.Vector(center.x + innerRadius * Math.cos(angle - angleStepSpike / 3), center.y + innerRadius * Math.sin(angle - angleStepSpike / 3));
@@ -175,8 +181,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                             }
                             two.add(spike);
                             break;
+                        }
 
-                        case 1: // Arched Gates
+                        case 1: { // Arched Gates
                             const startAngle = angle - (Math.PI / symmetry) * 0.8;
                             const endAngle = angle + (Math.PI / symmetry) * 0.8;
                             const arch = two.makeArcSegment(center.x, center.y, innerRadius, layerRadius, startAngle, endAngle);
@@ -193,11 +200,14 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 arch.linewidth = 2;
                             }
                             break;
+                        }
 
-                        case 2: // Woven Ring
+                        case 2: { // Woven Ring
                             if (j === 0) {
-                                const outerVertices = [], innerVertices = [];
-                                const weaveCount = symmetry * 3, weaveAmplitude = layerWidth * 0.25;
+                                const outerVertices = [],
+                                    innerVertices = [];
+                                const weaveCount = symmetry * 3,
+                                    weaveAmplitude = layerWidth * 0.25;
                                 const baseRingRadius = layerCenterRadius;
                                 const weaveFrequency = Math.max(3, Math.floor(symmetry / 2));
                                 for (let k = 0; k <= weaveCount; k++) {
@@ -222,8 +232,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 two.add(wovenPath);
                             }
                             break;
+                        }
 
-                        case 3: // Geometric Lattice
+                        case 3: { // Geometric Lattice
                             const angleStepLattice = (Math.PI * 2) / symmetry;
                             const x1 = center.x + Math.cos(angle) * innerRadius;
                             const y1 = center.y + Math.sin(angle) * innerRadius;
@@ -240,8 +251,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                             line2.stroke = layerColor;
                             line2.linewidth = 1;
                             break;
+                        }
 
-                        case 4: // Boundary Ring
+                        case 4: { // Boundary Ring
                             if (j === 0) {
                                 const innerBoundary = two.makeCircle(center.x, center.y, innerRadius);
                                 innerBoundary.noFill();
@@ -253,8 +265,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 outerBoundary.linewidth = 1.5;
                             }
                             break;
+                        }
 
-                        case 5: // Gradient Ring
+                        case 5: { // Gradient Ring
                             if (j === 0) {
                                 const color1 = selectedPalette.colors[i % selectedPalette.colors.length];
                                 const color2 = selectedPalette.colors[(i + 1) % selectedPalette.colors.length];
@@ -265,14 +278,18 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 ring.linewidth = layerWidth * 0.95;
                             }
                             break;
+                        }
 
-                        case 6: // Negative Space
+                        case 6: { // Negative Space
                             break;
+                        }
 
-                        case 7: // Scalloped Ring
+                        case 7: { // Scalloped Ring
                             if (j === 0) {
-                                const outerVertices = [], innerVertices = [];
-                                const scallopCount = symmetry * 3, scallopAmplitude = layerWidth * 0.4;
+                                const outerVertices = [],
+                                    innerVertices = [];
+                                const scallopCount = symmetry * 3,
+                                    scallopAmplitude = layerWidth * 0.4;
                                 for (let k = 0; k <= scallopCount; k++) {
                                     const scallopAngle = (k / scallopCount) * (Math.PI * 2);
                                     const baseRadius = layerCenterRadius - scallopAmplitude / 2;
@@ -297,8 +314,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 two.add(scallopPath);
                             }
                             break;
+                        }
 
-                        case 8: // Dotted Ring
+                        case 8: { // Dotted Ring
                             const dotX_st = center.x + layerCenterRadius * Math.cos(angle);
                             const dotY_st = center.y + layerCenterRadius * Math.sin(angle);
                             const dot_st = two.makeCircle(dotX_st, dotY_st, 3);
@@ -315,12 +333,15 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 dot_st.linewidth = 2;
                             }
                             break;
+                        }
 
-                        case 9: // Triangles
+                        case 9: { // Triangles
                             const angleStepTriangle = (Math.PI * 2) / symmetry;
                             const safeOuterRadius = layerRadius - 1;
                             const safeInnerRadius = innerRadius + 1;
-                            if (safeInnerRadius >= safeOuterRadius) { break; }
+                            if (safeInnerRadius >= safeOuterRadius) {
+                                break;
+                            }
                             const t1 = new Two.Vector(center.x + safeOuterRadius * Math.cos(angle), center.y + safeOuterRadius * Math.sin(angle));
                             const t2 = new Two.Vector(center.x + safeInnerRadius * Math.cos(angle - angleStepTriangle / 2.5), center.y + safeInnerRadius * Math.sin(angle - angleStepTriangle / 2.5));
                             const t3 = new Two.Vector(center.x + safeInnerRadius * Math.cos(angle + angleStepTriangle / 2.5), center.y + safeInnerRadius * Math.sin(angle + angleStepTriangle / 2.5));
@@ -339,8 +360,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                             }
                             two.add(triangle);
                             break;
+                        }
 
-                        case 10: // Super-ellipse
+                        case 10: { // Super-ellipse
                             const shapeSize = Math.min(layerWidth * 0.8, (Math.PI * 2 * layerCenterRadius) / symmetry * 0.8);
                             const corner = shapeSize * 0.5 * prng.nextFloat()
                             const superellipse_st = two.makeRoundedRectangle(0, 0, shapeSize, shapeSize, corner);
@@ -359,8 +381,9 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                             superellipse_st.rotation = angle;
                             superellipse_st.translation.set(center.x + layerCenterRadius * Math.cos(angle), center.y + layerCenterRadius * Math.sin(angle));
                             break;
+                        }
 
-                        case 11: // Dashed Line Ring
+                        case 11: { // Dashed Line Ring
                             if (j === 0) {
                                 const ring = two.makeCircle(center.x, center.y, layerCenterRadius);
                                 ring.noFill();
@@ -371,10 +394,12 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 (ring as any).dashes = [dashLength, dashLength * (0.5 + prng.nextFloat())];
                             }
                             break;
+                        }
 
-                        case 12: // Teardrop Petals
+                        // Replace the old case 12 with this simplified version
+                        case 12: {// Teardrop Petals
                             const teardropLength = layerWidth * 0.9;
-                            const teardropWidth = (Math.PI * 2 * (innerRadius + teardropLength / 2)) / symmetry * 0.4;
+                            const teardropWidth = (Math.PI * 2 * innerRadius) / symmetry * 0.4;
                             const teardrop = two.makeEllipse(0, 0, teardropLength / 2, teardropWidth / 2);
                             teardrop.vertices[0].x -= teardropLength * 0.25;
                             if (styleChoice < 0.5) {
@@ -390,13 +415,12 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                                 teardrop.linewidth = 2;
                             }
                             teardrop.rotation = angle;
-                            teardrop.translation.set(
-                                center.x + (innerRadius + teardropLength / 2) * Math.cos(angle),
-                                center.y + (innerRadius + teardropLength / 2) * Math.sin(angle)
-                            );
+                            teardrop.translation.set(center.x + (innerRadius + teardropLength / 2) * Math.cos(angle), center.y + (innerRadius + teardropLength / 2) * Math.sin(angle));
+                            two.add(teardrop);
                             break;
+                        }
 
-                        case 13: // Leaf Petals
+                        case 13: {// Leaf Petals
                             const leafLength_st = layerWidth;
                             const leafWidth_st = (Math.PI * 2 * innerRadius) / symmetry * 0.5;
                             const leaf_st = new Two.Path([new Two.Anchor(0, 0), new Two.Anchor(leafLength_st / 2, -leafWidth_st / 2), new Two.Anchor(leafLength_st, 0), new Two.Anchor(leafLength_st / 2, leafWidth_st / 2)], true, true);
@@ -416,6 +440,57 @@ export const MandalaCanvas = (props: MandalaCanvasProps) => {
                             leaf_st.translation.set(center.x + innerRadius * Math.cos(angle), center.y + innerRadius * Math.sin(angle));
                             two.add(leaf_st);
                             break;
+                        }
+
+                        case 14: { // Crescent Moon (Corrected)
+                            const crescentRadius = layerWidth * 0.45;
+                            const crescentFatness = 0.6;
+
+                            // --- FIX: Add a guard clause ---
+                            if (crescentRadius <= 0) {
+                                break; // Don't draw if the shape is too small
+                            }
+
+                            const vertices = [];
+                            const resolution = 16;
+
+                            for (let i = 0; i <= resolution; i++) {
+                                const t = i / resolution;
+                                const a = -Math.PI / 2 + t * Math.PI;
+                                vertices.push(new Two.Vector(
+                                    crescentRadius * Math.cos(a),
+                                    crescentRadius * Math.sin(a)
+                                ));
+                            }
+
+                            for (let i = resolution; i >= 0; i--) {
+                                const t = i / resolution;
+                                const a = -Math.PI / 2 + t * Math.PI;
+                                vertices.push(new Two.Vector(
+                                    crescentRadius * Math.cos(a) * crescentFatness,
+                                    crescentRadius * Math.sin(a)
+                                ));
+                            }
+
+                            const crescent = new Two.Path(vertices, true);
+
+                            if (styleChoice < 0.7) {
+                                crescent.fill = layerColor;
+                                crescent.noStroke();
+                            } else {
+                                crescent.noFill();
+                                crescent.stroke = layerColor;
+                                crescent.linewidth = 1.5;
+                            }
+
+                            crescent.rotation = angle - Math.PI / 2;
+                            crescent.translation.set(
+                                center.x + layerCenterRadius * Math.cos(angle),
+                                center.y + layerCenterRadius * Math.sin(angle)
+                            );
+                            two.add(crescent);
+                            break;
+                        }
                     }
                 }
             }
