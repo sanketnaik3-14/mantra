@@ -20,13 +20,7 @@
 /* --- FIX: Make the SVG inside responsive --- */
 #mandala-canvas-react svg {
   /* The SVG will be 90% of the smallest viewport dimension (width or height) */
-  width: 90vmin;
-  height: 90vmin;
-  /* Set a minimum and maximum size for aesthetic control */
-  min-width: 300px;
-  min-height: 300px;
-  max-width: 800px;
-  max-height: 800px;
+
 
   border-radius: 50%;
   background-color: #F7F7F7;
