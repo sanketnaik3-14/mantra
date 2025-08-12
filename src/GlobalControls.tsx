@@ -41,24 +41,26 @@ export const GlobalControls = (props: GlobalControlsProps) => {
                 </div>
             </div>
 
-            {/* --- Layer Selection UI (only visible when separated) --- */}
-            {isSeparated && (
-                <div className="control-group">
-                    <h3>Edit Layer</h3>
-                    <div className="layer-selection-buttons">
-                        <button className={activeLayer === null ? 'active' : ''} onClick={() => setActiveLayer(null)}>All</button>
-                        {Array.from({ length: layers }, (_, i) => (
-                            <button
-                                key={i}
-                                className={activeLayer === i ? 'active' : ''}
-                                onClick={() => setActiveLayer(i)}
-                            >
-                                {i + 1}
-                            </button>
-                        ))}
+            {/* --- FIX: Added a container with a fixed height to prevent layout shift --- */}
+            <div style={{ minHeight: '100px' }}>
+                {isSeparated && (
+                    <div className="control-group">
+                        <h3>Edit Layer</h3>
+                        <div className="layer-selection-buttons">
+                            <button className={activeLayer === null ? 'active' : ''} onClick={() => setActiveLayer(null)}>All</button>
+                            {Array.from({ length: layers }, (_, i) => (
+                                <button
+                                    key={i}
+                                    className={activeLayer === i ? 'active' : ''}
+                                    onClick={() => setActiveLayer(i)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </>
     );
 };

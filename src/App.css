@@ -5,28 +5,44 @@
   width: 100vw;
   background-color: #f0f0f0;
   font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  /* Prevent scrollbars */
 }
 
-/* Add this to the end of src/App.css */
-
+/* --- FIX: Make the canvas container flexible --- */
 #mandala-canvas-react {
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
+}
+
+/* --- FIX: Make the SVG inside responsive --- */
+#mandala-canvas-react svg {
+  /* The SVG will be 90% of the smallest viewport dimension (width or height) */
+  width: 90vmin;
+  height: 90vmin;
+  /* Set a minimum and maximum size for aesthetic control */
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 800px;
+  max-height: 800px;
+
   border-radius: 50%;
   background-color: #F7F7F7;
   border: 1px solid #EAEAEA;
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-body.dark-mode #mandala-canvas-react {
+body.dark-mode #mandala-canvas-react svg {
   background-color: #1C1C1E;
   border-color: #333;
 }
 
 .controls-panel {
   width: 350px;
+  flex-shrink: 0;
+  /* Prevent the panel from shrinking */
   background-color: #ffffff;
   padding: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -38,9 +54,10 @@ body.dark-mode #mandala-canvas-react {
   flex-grow: 1;
   display: grid;
   place-items: center;
+  /* This is crucial to allow the flex item to shrink properly */
+  min-width: 0;
 }
 
-/* Add these styles to src/App.css */
 .control-group {
   padding: 15px;
   border: 1px solid #eee;
@@ -62,29 +79,38 @@ body.dark-mode #mandala-canvas-react {
   width: 100%;
 }
 
-/* src/App.css */
 .control-group-buttons {
   margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .control-group-buttons label {
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
+  width: 100%;
 }
 
 .control-group-buttons button {
   padding: 8px 12px;
-  margin-right: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
   background-color: #fff;
   cursor: pointer;
+  flex-grow: 1;
 }
 
 .control-group-buttons button.active {
   background-color: #e0e0e0;
   border-color: #999;
+}
+
+.layer-selection-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 8px;
 }
 
 body.dark-mode .control-group-buttons button {
@@ -95,4 +121,20 @@ body.dark-mode .control-group-buttons button {
 body.dark-mode .control-group-buttons button.active {
   background-color: #444;
   border-color: #666;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .App {
+    flex-direction: column;
+  }
+
+  .controls-panel {
+    width: 100%;
+    height: auto;
+    /* Allow height to be determined by content */
+    max-height: 45vh;
+    /* But don't let it take more than 45% of the screen */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
 }
